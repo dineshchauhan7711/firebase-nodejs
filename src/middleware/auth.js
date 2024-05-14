@@ -1,24 +1,29 @@
 const firebase = require("../helper/firebase/firebase_admin");
 
-function authMiddleware(request, response, next) {
-     const headerToken = request.headers.authorization;
+function authMiddleware(req, res, next) {
+     const headerToken = req.headers.authorization;
      if (!headerToken) {
-          return response.send({ message: "No token provided" }).status(401);
-     }
+          return res.send({ message: "No token provided" }).status(401);
+     };
 
      if (headerToken && headerToken.split(" ")[0] !== "Bearer") {
-          response.send({ message: "Invalid token" }).status(401);
-     }
+          res.send({ message: "Invalid token" }).status(401);
+     };
 
      const token = headerToken.split(" ")[1];
-     console.log('token :>> ', token);
      firebase
           .auth()
           .verifyIdToken(token)
-          .then(() => next())
+          .then((user) => {
+               req.user = {
+                    uid: user.uid,
+                    email: user.email
+               }
+               next()
+          })
           .catch((error) => {
                console.log('error :>> ', error);
-               return response.send({ message: "Could not authorize" }).status(403)
+               return res.send({ message: "Invalid token" }).status(401)
           });
 }
 

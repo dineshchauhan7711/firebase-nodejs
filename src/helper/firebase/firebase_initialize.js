@@ -4,7 +4,7 @@ const { initializeApp } = require('firebase/app');
 // Config
 const config = require('../../config/config');
 
-// Firebase Config
+// // Firebase Config
 const firebaseConfig = {
      apiKey: config.firebase.apiKey,
      authDomain: config.firebase.authDomain,
@@ -15,7 +15,7 @@ const firebaseConfig = {
      measurementId: config.firebase.measurementId,
 };
 
-// Initialize Firebase app
+// // Initialize Firebase app
 const fireApp = initializeApp(firebaseConfig);
 
 
